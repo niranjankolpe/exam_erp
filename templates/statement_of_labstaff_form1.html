@@ -1,0 +1,475 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href= {% static "css/style.css" %}>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    
+    <script>
+        
+        function changesubjectinput() {
+            var subject_count = document.getElementById("subject_count").value;
+            // Get the form container
+            var formContainer = document.getElementById('subjects');
+            formContainer.innerHTML = "";
+
+            for (var i = 1; i <= subject_count; i++) {
+                // Create a label element
+                var label = document.createElement('label');
+                label.setAttribute('for', 'subject' + i.toString()); // Associate the label with the input
+                label.innerHTML = 'Subject ' + i.toString(); // Text for the label
+
+                // Create an input element
+                var input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'subject' + i.toString());
+                input.setAttribute('name', 'subject' + i.toString());
+                input.setAttribute('placeholder', 'subject' + i.toString() +" name");
+
+                // Create Academic Year
+                var academic_year = document.createElement('select');
+                academic_year.setAttribute('id', 'subject' + i.toString()+"_academic_year");
+                academic_year.setAttribute('name', 'subject' + i.toString()+"_academic_year");
+                academic_year.innerHTML = '<option value="FE">FE</option> <option value="SE">SE</option> <option value="TE">TE</option> <option value="BE">BE</option>';
+
+                // Create PR/OR/TW
+                var pr_or_tw = document.createElement('select');
+                pr_or_tw.setAttribute('id', 'subject' + i.toString()+"_pr_or_tw");
+                pr_or_tw.setAttribute('name', 'subject' + i.toString()+"_pr_or_tw");
+                pr_or_tw.innerHTML = '<option value="PR">PR</option> <option value="OR">OR</option> <option value="TW">TW</option>';
+
+                // Create number of student
+                var student_count = document.createElement("input");
+                student_count.setAttribute("id", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("name", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("type", "number");
+                student_count.setAttribute("placeholder", 'Students appered');
+
+                // Create Date of conduct
+                var date_of_conduct = document.createElement("input");
+                date_of_conduct.setAttribute("type", "date");
+                date_of_conduct.setAttribute("id", 'subject' + i.toString()+"_date_of_conduct");
+                date_of_conduct.setAttribute("name", 'subject' + i.toString()+"_date_of_conduct");
+
+                // Create days of preparation
+                var days_of_preparation = document.createElement("input");
+                days_of_preparation.setAttribute("id", 'subject' + i.toString()+"_days_of_preparation");
+                days_of_preparation.setAttribute("name", 'subject' + i.toString()+"_days_of_preparation");
+                days_of_preparation.setAttribute("type", "number");
+                days_of_preparation.setAttribute("placeholder", 'Days takenfor preparation');
+
+                // Create Number of batches
+                var batch_count = document.createElement("input");
+                batch_count.setAttribute("id", 'subject' + i.toString()+"_batch_count");
+                batch_count.setAttribute("name", 'subject' + i.toString()+"_batch_count");
+                batch_count.setAttribute("type", "number");
+                batch_count.setAttribute("placeholder", 'Number of batches');
+
+                // Create number of expert
+                var expert_count = document.createElement("input");
+                expert_count.setAttribute("id", 'subject' + i.toString()+"_expert_count");
+                expert_count.setAttribute("name", 'subject' + i.toString()+"_expert_count");
+                expert_count.setAttribute("type", "number");
+                expert_count.setAttribute("placeholder", "Number of experts")
+
+                // Create number of lab assistant
+                var lab_assistant_count = document.createElement("input");
+                lab_assistant_count.setAttribute("id", 'subject' + i.toString()+"_lab_assistant_count");
+                lab_assistant_count.setAttribute("name", 'subject' + i.toString()+"_lab_assistant_count");
+                lab_assistant_count.setAttribute("type", "number");
+                lab_assistant_count.setAttribute("placeholder", "Number of lab assistant")
+
+                // Create number of technical assistant
+                var tech_assistant_count = document.createElement("input");
+                tech_assistant_count.setAttribute("id", 'subject' + i.toString()+"_tech_assistant_count");
+                tech_assistant_count.setAttribute("name", 'subject' + i.toString()+"_tech_assistant_count");
+                tech_assistant_count.setAttribute("type", "number");
+                tech_assistant_count.setAttribute("placeholder", "Number of tech assistant")
+
+                // Create number of peon
+                var peon_count = document.createElement("input");
+                peon_count.setAttribute("id", 'subject' + i.toString()+"_peon_count");
+                peon_count.setAttribute("name", 'subject' + i.toString()+"_peon_count");
+                peon_count.setAttribute("type", "number");
+                peon_count.setAttribute("placeholder", "Number of peon")
+
+                // Append the label and input to the form container
+                formContainer.appendChild(label);
+                formContainer.appendChild(input);
+                formContainer.appendChild(academic_year);
+                formContainer.appendChild(pr_or_tw);
+                formContainer.appendChild(student_count);
+                formContainer.appendChild(date_of_conduct);
+                formContainer.appendChild(days_of_preparation);
+                formContainer.appendChild(batch_count);
+                formContainer.appendChild(expert_count);
+                formContainer.appendChild(lab_assistant_count);
+                formContainer.appendChild(tech_assistant_count);
+                formContainer.appendChild(peon_count);
+                formContainer.appendChild(document.createElement('br')); // Line break
+                formContainer.appendChild(document.createElement('br')); // Line break
+            }
+        }
+
+
+        function downloadExcel(){
+            // Create a new workbook and a sheet
+            const wb = XLSX.utils.book_new();
+            // Sample data
+            const data = [
+                ["","","","","","","","Expert","","Lab","","","Tech","","","Peon","","","Expert","","Lab","","Tech","","Peon","","Total","",""],
+
+                ["Year & Course", "Subject of Exam", "PR/OR/TW", 
+                "No. of Student", "Dates of conduct of Exam", "Days of Prep & Clng","No. of Batches", 
+                "No. of Expert Asstt", "Rate for P & E", 
+                "Lab asstt", "Rate for Prep", "Rate for Exam",
+                "Tech asstt", "Rate for Prep", "Rate for Exam",
+                "Peon", "Rate for Prep", "Rate for Exam",
+                "Expert Asstt exam", "Amount Preparation & Cleaning",
+                "Lab Asstt exam", "Amount Preparation & Cleaning",
+                "Tech Asstt exam", "Amount Preparation & Cleaning",
+                "Peon exam", "Amount Preparation & Cleaning",
+                "Total for Prep & Clean", "Rem exam", "Total rem"
+            ],
+            ];
+
+            for (var i=1;i<=document.getElementById('subject_count').value;i++){
+                let payment_expert_asstt_exam = document.getElementById("rate_PandE_expert").value * 
+                                    document.getElementById("subject"+i.toString()+ "_expert_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_expert_ammount_for_prep_and_cleaning = document.getElementById("rate_PandE_expert").value * 
+                                    document.getElementById("subject"+i.toString()+ "_expert_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+                
+                let payment_lab_asstt_exam = document.getElementById("rate_exam_lab").value *
+                                    document.getElementById("subject"+i.toString()+ "_lab_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_lab_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_lab").value * 
+                                    document.getElementById("subject"+i.toString()+ "_lab_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_tech_asstt_exam = document.getElementById("rate_exam_tech").value * 
+                                    document.getElementById("subject"+i.toString()+ "_tech_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_tech_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_tech").value * 
+                                    document.getElementById("subject"+i.toString()+ "_tech_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_peon_asstt_exam = document.getElementById("rate_exam_peon").value * 
+                                    document.getElementById("subject"+i.toString()+ "_peon_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_peon_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_peon").value * 
+                                    document.getElementById("subject"+i.toString()+ "_peon_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_total_for_prep_and_clean = payment_expert_ammount_for_prep_and_cleaning +
+                                                        payment_lab_ammount_for_prep_and_cleaning +
+                                                        payment_tech_ammount_for_prep_and_cleaning + 
+                                                        payment_peon_ammount_for_prep_and_cleaning;
+
+                let payment_rem_exam = payment_expert_asstt_exam + 
+                                        payment_lab_asstt_exam + 
+                                        payment_tech_asstt_exam +
+                                        payment_peon_asstt_exam;
+                
+                let total_rem = payment_total_for_prep_and_clean + payment_rem_exam;
+
+                new_row = [
+                    document.getElementById("subject"+i.toString()+"_academic_year").value + " " + document.getElementById("department").value,
+                    document.getElementById("subject"+i.toString()).value,
+                    document.getElementById("subject"+i.toString()+"_pr_or_tw").value,
+                    document.getElementById("subject"+i.toString()+"_student_count").value,
+                    document.getElementById("subject"+i.toString()+"_date_of_conduct").value,
+                    document.getElementById("subject"+i.toString()+"_days_of_preparation").value,
+                    document.getElementById("subject"+i.toString()+"_batch_count").value,
+                    document.getElementById("subject"+i.toString()+"_expert_count").value,
+                    document.getElementById("rate_PandE_expert").value,
+                    document.getElementById("subject"+i.toString()+"_lab_assistant_count").value,
+                    document.getElementById("rate_prep_lab").value,
+                    document.getElementById("rate_exam_lab").value,
+                    document.getElementById("subject"+i.toString()+"_tech_assistant_count").value,
+                    document.getElementById("rate_prep_tech").value,
+                    document.getElementById("rate_exam_tech").value,
+                    document.getElementById("subject"+i.toString()+"_peon_count").value,
+                    document.getElementById("rate_prep_peon").value,
+                    document.getElementById("rate_exam_peon").value,
+
+                    payment_expert_asstt_exam,
+                    payment_expert_ammount_for_prep_and_cleaning,
+                    payment_lab_asstt_exam,
+                    payment_lab_ammount_for_prep_and_cleaning,
+                    payment_tech_asstt_exam,
+                    payment_tech_ammount_for_prep_and_cleaning,
+                    payment_peon_asstt_exam,
+                    payment_peon_ammount_for_prep_and_cleaning,
+
+                    payment_total_for_prep_and_clean,
+                    payment_rem_exam,
+
+                    total_rem
+                ];
+                data.push(new_row);
+                console.log("new row = ");
+                console.log(new_row);
+                
+                
+            }
+            
+            console.log(data);
+            const ws = XLSX.utils.aoa_to_sheet(data);  // Converts the array to a worksheet
+
+            // Apply wrapText to the entire worksheet range
+            Object.keys(ws).forEach(key => {
+                if (key[0] !== '!') { // Avoid meta keys like !ref or !merges
+                    if (!ws[key].s) ws[key].s = {};
+                    ws[key].s.alignment = { wrapText: true };
+                }
+            });
+
+            // Merge "Name" column to span two rows (A2:A3)
+            ws['!merges'] = [
+                { s: {r:0, c:7}, e: {r:0, c:8}},
+                { s: {r:0, c:9}, e:{r:0, c:11}},
+                { s: {r:0, c:12}, e:{r:0, c:14}},
+                { s: {r:0, c:15}, e:{r:0, c:17}},
+
+
+                { s: {r:0, c:18}, e:{r:0, c:19}},
+                { s: {r:0, c:20}, e:{r:0, c:21}},
+                { s: {r:0, c:22}, e:{r:0, c:23}},
+                { s: {r:0, c:24}, e:{r:0, c:25}},
+                { s: {r:0, c:26}, e:{r:0, c:27}},
+
+
+            ];
+
+            // Append the sheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            // Generate a download
+            XLSX.writeFile(wb, "Output.xlsx");
+
+        }
+    
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;  // Access jsPDF from the UMD object
+
+            // Generate HTML table from the data
+            const doc = new jsPDF('l');
+            const data = [
+                // First row with merged columns
+                [
+                    { content: "", colSpan: 7 }, // Empty cells up to "Expert"
+                    { content: "Expert", colSpan: 2 },
+                    { content: "Lab", colSpan: 3 },
+                    { content: "Tech", colSpan: 3 },
+                    { content: "Peon", colSpan: 3 },
+                    { content: "Expert", colSpan: 2 },
+                    { content: "Lab", colSpan: 2 },
+                    { content: "Tech", colSpan: 2 },
+                    { content: "Peon", colSpan: 2 },
+                    { content: "Total", colSpan: 2 }
+                ],
+
+                // Second row (regular row with no merged cells)
+                [
+                    "Year & Course", "Subject of Exam", "PR/ OR/ TW", "No. of Students", 
+                    "Dates of conduct of Exam", "Days of Prep & Clng", "No. of Batches", 
+                    "No. of Expert Asstt", "Rate for P&E", 
+                    "Lab Asstt", "Rate for Prep", "Rate for Exam",
+                    "Tech Asstt", "Rate for Prep", "Rate for Exam",
+                    "Peon", "Rate for Prep", "Rate for Exam",
+                    "Expert Asstt exam", "Amount for Prep & Clng",
+                    "Lab Asstt exam", "Amount for Prep & Clng",
+                    "Tech Asstt exam", "Amount for Prep & Clng",
+                    "Peon exam", "Amount for Prep & Clng",
+                    "Total for Prep & Clean", "Rem exam", "Total rem"
+                ]
+            ];
+
+            let rows = [];
+            for (var i = 1; i <= document.getElementById('subject_count').value; i++) {
+                
+                let payment_expert_asstt_exam = document.getElementById("rate_PandE_expert").value * 
+                                    document.getElementById("subject"+i.toString()+ "_expert_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_expert_ammount_for_prep_and_cleaning = document.getElementById("rate_PandE_expert").value * 
+                                    document.getElementById("subject"+i.toString()+ "_expert_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+                
+                let payment_lab_asstt_exam = document.getElementById("rate_exam_lab").value *
+                                    document.getElementById("subject"+i.toString()+ "_lab_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_lab_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_lab").value * 
+                                    document.getElementById("subject"+i.toString()+ "_lab_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_tech_asstt_exam = document.getElementById("rate_exam_tech").value * 
+                                    document.getElementById("subject"+i.toString()+ "_tech_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_tech_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_tech").value * 
+                                    document.getElementById("subject"+i.toString()+ "_tech_assistant_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_peon_asstt_exam = document.getElementById("rate_exam_peon").value * 
+                                    document.getElementById("subject"+i.toString()+ "_peon_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_batch_count").value;
+
+                let payment_peon_ammount_for_prep_and_cleaning = document.getElementById("rate_prep_peon").value * 
+                                    document.getElementById("subject"+i.toString()+ "_peon_count").value * 
+                                    document.getElementById("subject"+i.toString()+ "_days_of_preparation").value;
+
+                let payment_total_for_prep_and_clean = payment_expert_ammount_for_prep_and_cleaning +
+                                                        payment_lab_ammount_for_prep_and_cleaning +
+                                                        payment_tech_ammount_for_prep_and_cleaning + 
+                                                        payment_peon_ammount_for_prep_and_cleaning;
+
+                let payment_rem_exam = payment_expert_asstt_exam + 
+                                        payment_lab_asstt_exam + 
+                                        payment_tech_asstt_exam +
+                                        payment_peon_asstt_exam;
+                
+                let total_rem = payment_total_for_prep_and_clean + payment_rem_exam;
+                
+                
+                
+                
+                
+                
+                rows.push([
+                    document.getElementById("subject"+i.toString()+"_academic_year").value + " " + document.getElementById("department").value,
+                    document.getElementById("subject"+i).value,
+                    document.getElementById("subject"+i+"_pr_or_tw").value,
+                    document.getElementById("subject"+i+"_student_count").value,
+                    document.getElementById("subject"+i+"_date_of_conduct").value,
+                    document.getElementById("subject"+i+"_days_of_preparation").value,
+                    document.getElementById("subject"+i+"_batch_count").value,
+                    document.getElementById("subject"+i.toString()+"_expert_count").value,
+                    document.getElementById("rate_PandE_expert").value,
+                    document.getElementById("subject"+i.toString()+"_lab_assistant_count").value,
+                    document.getElementById("rate_prep_lab").value,
+                    document.getElementById("rate_exam_lab").value,
+                    document.getElementById("subject"+i.toString()+"_tech_assistant_count").value,
+                    document.getElementById("rate_prep_tech").value,
+                    document.getElementById("rate_exam_tech").value,
+                    document.getElementById("subject"+i.toString()+"_peon_count").value,
+                    document.getElementById("rate_prep_peon").value,
+                    document.getElementById("rate_exam_peon").value,
+
+                    payment_expert_asstt_exam,
+                    payment_expert_ammount_for_prep_and_cleaning,
+                    payment_lab_asstt_exam,
+                    payment_lab_ammount_for_prep_and_cleaning,
+                    payment_tech_asstt_exam,
+                    payment_tech_ammount_for_prep_and_cleaning,
+                    payment_peon_asstt_exam,
+                    payment_peon_ammount_for_prep_and_cleaning,
+
+                    payment_total_for_prep_and_clean,
+                    payment_rem_exam,
+
+                    total_rem
+
+
+                ]);
+            }
+
+
+            // Add table content to PDF
+            doc.autoTable({
+                head: data.slice(0, 2),
+                body: rows,
+                theme: 'grid',
+                headStyles: { fontSize: 8 },
+                bodyStyles: { fontSize: 10 },
+                styles:{halign:'center', valign:'top', lineWidth: 0.5,},
+                margin: { right: 20, left: 20 }
+            });
+
+            // Save the PDF
+            doc.save('Output.pdf');
+        }
+
+    
+    </script>
+</head>
+<body>
+    
+
+    <div>
+        <form id="statement_of_labstaff_form" method="post" action="{% url "labstaff" %}">{% csrf_token %}
+            <label for="university">university Name</label>
+            <select name="university" id="university">
+                <option value="FE">University of Mumbai</option>
+                <option value="SE">Pune University</option>
+            </select>
+        <br>
+            <label for="college_name">College Name</label>
+            <input type="text" id="college_name" name="college_name" required>
+        <br>
+            <label for="department">Department Name</label>
+            <input type="text" id="department" name="department" required>
+        <br>
+            <label for="half">Month and Year</label>
+            <input type="text" id="half" name="time_period" required>
+        <br>
+            <label for="subject_count">Number of subjects</label>
+            <input min="1" max="20" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required>
+        <br>
+            <div id="subjects">
+
+            </div>
+        <br>
+            <label for="rate_PandE_expert">Rate of Expert for P&E</label>
+            <input type="int" id="rate_PandE_expert" name = "rate_expert_PandE" required>
+        <br>
+            <!-- lab assistant -->
+            <label for="rate_prep_lab">Rate of lab assistant for Preparation</label>
+            <input type="int" id="rate_prep_lab" name="rate_lab_assist_prep" required>
+        <br>
+            <label for="rate_exam_lab">Rate of lab assistant for Exam</label>
+            <input type="int" id="rate_exam_lab" name="rate_lab_assist_exam" required>
+        <br>
+            <!-- technical assistant -->
+            <label for="rate_prep_tech">Rate of technical assistant for Preparation</label>
+            <input type="int" id="rate_prep_tech" name="rate_tech_assist_prep" required>
+        <br>
+            <label for="rate_exam_tech">Rate of technical assistant for Exam</label>
+            <input type="int" id="rate_exam_tech" name="rate_tech_assist_exam" required>
+        <br>
+            <!-- peon assistant -->
+            <label for="rate_prep_peon">Rate of peon for Preparation</label>
+            <input type="int" id="rate_prep_peon" name="rate_peon_prep" required>
+        <br>
+            <label for="rate_exam_peon">Rate of peon for Exam</label>
+            <input type="int" id="rate_exam_peon" name="rate_peon_exam" required>
+        <br>
+            <label for="excel_pdf">Excel / PDF</label>
+            <select name="excel_pdf" id="excel_pdf">
+                <option value="excel">Download Excel</option>
+                <option value="pdf">Download PDF</option>
+            </select>
+        <br>
+            
+            <button type="submit"> submit </button>
+            
+        </form>
+    </div>
+    
+
+
+
+</body>
+</html>

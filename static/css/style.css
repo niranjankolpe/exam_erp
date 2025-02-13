@@ -1,0 +1,47 @@
+#statement_of_labstaff_form input{
+    height: 20px;
+    margin: 5px 5px 5px 0px;
+}
+
+#statement_of_labstaff_form{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+#statement_of_labstaff_form select{
+    height: 30px;
+    margin: 5px 5px 5px 0px;
+}
+
+#statement_of_labstaff_form button{
+    height: 50px;
+    width: 100px;
+    align-self: center;
+}
+
+#electricity_bills input{
+    height: 20px;
+    margin: 5px 5px 5px 0px;
+}
+
+#electricity_bills{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+#electricity_bills select{
+    height: 30px;
+    margin: 5px 5px 5px 0px;
+}
+
+#electricity_bills button{
+    height: 50px;
+    width: 100px;
+    align-self: center;
+}

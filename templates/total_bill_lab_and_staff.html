@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href= {% static "css/style.css" %}>
+    
+    <script>
+        
+        function changesubjectinput() {
+            var staff_count = document.getElementById("staff_count").value;
+            // Get the form container
+            var formContainer = document.getElementById('staff');
+            formContainer.innerHTML = "";
+
+            for (var i = 1; i <= staff_count; i++) {
+                // Create a label element
+                var label = document.createElement('label');
+                label.setAttribute('for', 'staff_name' + i.toString()); // Associate the label with the input
+                label.innerHTML = 'Staff ' + i.toString(); // Text for the label
+
+                // Create an input element
+                var input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'staff_name' + i.toString());
+                input.setAttribute('name', 'staff_name' + i.toString());
+                input.setAttribute('placeholder', 'staff' + i.toString() +" name");
+
+                // Create FE bill
+                var examiner_FE = document.createElement("input");
+                examiner_FE.setAttribute("id", 'staff' + i.toString()+"_examiner_FE");
+                examiner_FE.setAttribute("name", 'staff' + i.toString()+"_examiner_FE");
+                examiner_FE.setAttribute("type", "number");
+                examiner_FE.setAttribute("placeholder", 'Bill of FE Examiner');
+
+                // Create SE bill
+                var examiner_SE = document.createElement("input");
+                examiner_SE.setAttribute("id", 'staff' + i.toString()+"_examiner_SE");
+                examiner_SE.setAttribute("name", 'staff' + i.toString()+"_examiner_SE");
+                examiner_SE.setAttribute("type", "number");
+                examiner_SE.setAttribute("placeholder", 'Bill of SE Examiner');
+
+                // Create TE bill
+                var examiner_TE = document.createElement("input");
+                examiner_TE.setAttribute("id", 'staff' + i.toString()+"_examiner_TE");
+                examiner_TE.setAttribute("name", 'staff' + i.toString()+"_examiner_TE");
+                examiner_TE.setAttribute("type", "number");
+                examiner_TE.setAttribute("placeholder", 'Bill of TE Examiner');
+
+                // Create BE bill
+                var examiner_BE = document.createElement("input");
+                examiner_BE.setAttribute("id", 'staff' + i.toString()+"_examiner_BE");
+                examiner_BE.setAttribute("name", 'staff' + i.toString()+"_examiner_BE");
+                examiner_BE.setAttribute("type", "number");
+                examiner_BE.setAttribute("placeholder", 'Bill of BE Examiner');
+
+                // Create ME bill
+                var examiner_ME = document.createElement("input");
+                examiner_ME.setAttribute("id", 'staff' + i.toString()+"_examiner_ME");
+                examiner_ME.setAttribute("name", 'staff' + i.toString()+"_examiner_ME");
+                examiner_ME.setAttribute("type", "number");
+                examiner_ME.setAttribute("placeholder", 'Bill of ME Examiner');
+    
+                // Create FE bill
+                var expert_FE = document.createElement("input");
+                expert_FE.setAttribute("id", 'staff' + i.toString()+"_expert_FE");
+                expert_FE.setAttribute("name", 'staff' + i.toString()+"_expert_FE");
+                expert_FE.setAttribute("type", "number");
+                expert_FE.setAttribute("placeholder", 'Bill of FE Expert Assist.');
+
+                // Create SE bill
+                var expert_SE = document.createElement("input");
+                expert_SE.setAttribute("id", 'staff' + i.toString()+"_expert_SE");
+                expert_SE.setAttribute("name", 'staff' + i.toString()+"_expert_SE");
+                expert_SE.setAttribute("type", "number");
+                expert_SE.setAttribute("placeholder", 'Bill of SE Expert Assist.');
+                
+                // Create TE bill
+                var expert_TE = document.createElement("input");
+                expert_TE.setAttribute("id", 'staff' + i.toString()+"_expert_TE");
+                expert_TE.setAttribute("name", 'staff' + i.toString()+"_expert_TE");
+                expert_TE.setAttribute("type", "number");
+                expert_TE.setAttribute("placeholder", 'Bill of TE Expert Assist.');
+
+                // Create BE bill
+                var expert_BE = document.createElement("input");
+                expert_BE.setAttribute("id", 'staff' + i.toString()+"_expert_BE");
+                expert_BE.setAttribute("name", 'staff' + i.toString()+"_expert_BE");
+                expert_BE.setAttribute("type", "number");
+                expert_BE.setAttribute("placeholder", 'Bill of BE Expert Assist.');
+
+                // Create ME bill
+                var expert_ME = document.createElement("input");
+                expert_ME.setAttribute("id", 'staff' + i.toString()+"_expert_ME");
+                expert_ME.setAttribute("name", 'staff' + i.toString()+"_expert_ME");
+                expert_ME.setAttribute("type", "number");
+                expert_ME.setAttribute("placeholder", 'Bill of ME Expert Assist.');
+
+                
+                // Append the label and input to the form container
+                formContainer.appendChild(label);
+                formContainer.appendChild(input);
+                formContainer.appendChild(examiner_FE);
+                formContainer.appendChild(examiner_SE);
+                formContainer.appendChild(examiner_TE);
+                formContainer.appendChild(examiner_BE);
+                formContainer.appendChild(examiner_ME);
+                formContainer.appendChild(document.createElement('br'));
+                formContainer.appendChild(expert_FE);
+                formContainer.appendChild(expert_SE);
+                formContainer.appendChild(expert_TE);
+                formContainer.appendChild(expert_BE);
+                formContainer.appendChild(expert_ME);
+                formContainer.appendChild(document.createElement('br')); // Line break
+                formContainer.appendChild(document.createElement('br')); // Line break
+            }
+        }
+    
+    </script>
+</head>
+<body>
+    
+
+    <div>
+        <form id="statement_of_labstaff_form" method="post" action="total_lab_and_staff">{% csrf_token %}
+            <label for="university">university Name</label>
+            <select name="university" id="university">
+                <option value="FE">University of Mumbai</option>
+                <option value="SE">Pune University</option>
+            </select>
+        <br>
+            <label for="college_name">College Name</label>
+            <input type="text" id="college_name" name="college_name" required>
+        <br>
+            <label for="department">Department Name</label>
+            <input type="text" id="department" name="department" required>
+        <br>
+            <label for="half">Month and Year</label>
+            <input type="text" id="half" name="time_period" required>
+        <br>
+            <label for="staff_count">Number of Staff</label>
+            <input min="1" type="number" id="staff_count" name="staff_count" onchange="changesubjectinput()" required>
+        <br>
+            <div id="staff">
+
+            </div>
+        <br>
+            <label for="excel_pdf">Excel / PDF</label>
+            <select name="excel_pdf" id="excel_pdf">
+                <option value="excel">Download Excel</option>
+                <option value="pdf">Download PDF</option>
+            </select>
+        <br>
+            <button type="submit"> submit </button>
+            
+        </form>
+    </div>
+    
+
+
+
+</body>
+</html>

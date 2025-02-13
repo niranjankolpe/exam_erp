@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href= {% static "css/style.css" %}>
+    
+    <script>
+        
+        function changesubjectinput() {
+            var subject_count = document.getElementById("subject_count").value;
+            // Get the form container
+            var formContainer = document.getElementById('subjects');
+            formContainer.innerHTML = "";
+
+            for (var i = 1; i <= subject_count; i++) {
+                // Create a label element
+                var label = document.createElement('label');
+                label.setAttribute('for', 'subject' + i.toString()); // Associate the label with the input
+                label.innerHTML = 'Subject ' + i.toString(); // Text for the label
+
+                // Create an input element
+                var input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'subject' + i.toString());
+                input.setAttribute('name', 'subject' + i.toString());
+                input.setAttribute('placeholder', 'subject' + i.toString() +" name");
+
+                // Create Academic Year
+                var academic_year = document.createElement('select');
+                academic_year.setAttribute('id', 'subject' + i.toString()+"_academic_year");
+                academic_year.setAttribute('name', 'subject' + i.toString()+"_academic_year");
+                academic_year.innerHTML = '<option value="FE">FE</option> <option value="SE">SE</option> <option value="TE">TE</option> <option value="BE">BE</option>';
+
+                // Create number of student
+                var student_count = document.createElement("input");
+                student_count.setAttribute("id", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("name", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("type", "number");
+                student_count.setAttribute("placeholder", 'Students appered');
+
+                // Create Date of conduct
+                var date_of_conduct = document.createElement("input");
+                date_of_conduct.setAttribute("type", "date");
+                date_of_conduct.setAttribute("id", 'subject' + i.toString()+"_date_of_conduct");
+                date_of_conduct.setAttribute("name", 'subject' + i.toString()+"_date_of_conduct");
+
+                
+                // Append the label and input to the form container
+                formContainer.appendChild(label);
+                formContainer.appendChild(input);
+                formContainer.appendChild(academic_year);
+                formContainer.appendChild(student_count);
+                formContainer.appendChild(date_of_conduct);
+                formContainer.appendChild(document.createElement('br')); // Line break
+                formContainer.appendChild(document.createElement('br')); // Line break
+            }
+        }
+    
+    </script>
+</head>
+<body>
+    
+
+    <div>
+        <form id="electricity_bills" method="post" action="electricity">{% csrf_token %}
+            <label for="university">university Name</label>
+            <select name="university" id="university">
+                <option value="FE">University of Mumbai</option>
+                <option value="SE">Pune University</option>
+            </select>
+        <br>
+            <label for="collage_name">Collage Name</label>
+            <input type="text" id="collage_name" name="collage_name" required>
+        <br>
+            <label for="department">Department Name</label>
+            <input type="text" id="department" name="department" required>
+        <br>
+            <label for="half">Month and Year</label>
+            <input type="text" id="half" name="time_period" required>
+        <br>
+            <label for="subject_count">Number of subjects</label>
+            <input min="1" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required>
+        <br>
+            <div id="subjects">
+
+            </div>
+        <br>
+            <label for="rate_of_electricity">Rate of Electricity</label>
+            <input type="int" id="rate_of_electricity" name = "rate_of_electricity" required>
+        <br>
+            <label for="excel_pdf">Excel / PDF</label>
+            <select name="excel_pdf" id="excel_pdf">
+                <option value="excel">Download Excel</option>
+                <option value="pdf">Download PDF</option>
+            </select>
+        <br>
+            <button type="submit"> submit </button>
+            
+        </form>
+    </div>
+    
+
+
+
+</body>
+</html>

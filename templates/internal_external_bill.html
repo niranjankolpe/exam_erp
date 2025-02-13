@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href= {% static "css/style.css" %}>
+
+    <script>
+        
+        function changesubjectinput() {
+            var subject_count = document.getElementById("subject_count").value;
+            // Get the form container
+            var formContainer = document.getElementById('subjects');
+            formContainer.innerHTML = "";
+
+            for (var i = 1; i <= subject_count; i++) {
+                // Create a label element
+                var label = document.createElement('label');
+                label.setAttribute('for', 'subject' + i.toString()); // Associate the label with the input
+                label.innerHTML = 'Subject ' + i.toString(); // Text for the label
+
+                // Create an input element
+                var input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'subject' + i.toString());
+                input.setAttribute('name', 'subject' + i.toString());
+                input.setAttribute('placeholder', 'subject' + i.toString() +" name");
+                
+                // Create examiner name
+                var examiner_name = document.createElement('input');
+                examiner_name.setAttribute('type', 'text');
+                examiner_name.setAttribute('id', 'subject' + i.toString()+"_examiner_name");
+                examiner_name.setAttribute('name', 'subject' + i.toString()+"_examiner_name");
+                examiner_name.setAttribute('placeholder', 'Examiner' + i.toString() +" name");
+
+                // Create Category
+                var category = document.createElement('select');
+                category.setAttribute('id', 'subject' + i.toString()+"_category");
+                category.setAttribute('name', 'subject' + i.toString()+"_category");
+                category.innerHTML = '<option value="I">INTERNAL</option> <option value="E">EXTERNAL</option> ';
+
+                // Create Academic Year
+                var academic_year = document.createElement('select');
+                academic_year.setAttribute('id', 'subject' + i.toString()+"_academic_year");
+                academic_year.setAttribute('name', 'subject' + i.toString()+"_academic_year");
+                academic_year.innerHTML = '<option value="FE">FE</option> <option value="SE">SE</option> <option value="TE">TE</option> <option value="BE">BE</option>';
+
+                // Create Date of conduct
+                var date_of_conduct = document.createElement("input");
+                date_of_conduct.setAttribute("type", "date");
+                date_of_conduct.setAttribute("id", 'subject' + i.toString()+"_date_of_conduct");
+                date_of_conduct.setAttribute("name", 'subject' + i.toString()+"_date_of_conduct");
+
+                // Create PR/OR/TW
+                var pr_or_tw = document.createElement('select');
+                pr_or_tw.setAttribute('id', 'subject' + i.toString()+"_pr_or_tw");
+                pr_or_tw.setAttribute('name', 'subject' + i.toString()+"_pr_or_tw");
+                pr_or_tw.innerHTML = '<option value="PR">PR</option> <option value="OR">OR</option> <option value="TW">TW</option>';
+
+                // Create number of student
+                var student_count = document.createElement("input");
+                student_count.setAttribute("id", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("name", 'subject' + i.toString()+"_student_count");
+                student_count.setAttribute("type", "number");
+                student_count.setAttribute("placeholder", 'Students appered');
+                
+                // Create rate
+                var rate = document.createElement("input");
+                rate.setAttribute("id", 'subject' + i.toString()+"_rate");
+                rate.setAttribute("name", 'subject' + i.toString()+"_rate");
+                rate.setAttribute("type", "number");
+                rate.setAttribute("placeholder", 'Rate');
+                
+                // Create payable_rate
+                var payable_rate = document.createElement("input");
+                payable_rate.setAttribute("id", 'subject' + i.toString()+"_payable_rate");
+                payable_rate.setAttribute("name", 'subject' + i.toString()+"_payable_rate");
+                payable_rate.setAttribute("type", "number");
+                payable_rate.setAttribute("placeholder", 'Payable Rate');
+
+                // Append the label and input to the form container
+                formContainer.appendChild(label);
+                formContainer.appendChild(input);
+                formContainer.appendChild(examiner_name);
+                formContainer.appendChild(category);
+                formContainer.appendChild(academic_year);
+                formContainer.appendChild(date_of_conduct);
+                formContainer.appendChild(pr_or_tw);
+                formContainer.appendChild(student_count);
+                formContainer.appendChild(rate);
+                formContainer.appendChild(payable_rate);
+                formContainer.appendChild(document.createElement('br')); // Line break
+                formContainer.appendChild(document.createElement('br')); // Line break
+            }
+        }
+
+    
+    </script>
+</head>
+<body>
+    
+
+    <div>
+        <form id="statement_of_labstaff_form" method="post" action="{% url "internal_external" %}">{% csrf_token %}
+            <label for="university">university Name</label>
+            <select name="university" id="university">
+                <option value="University of Mumbai">University of Mumbai</option>
+                <option value="Pune University">Pune University</option>
+            </select>
+        <br>
+            <label for="college_name">College Name</label>
+            <input type="text" id="college_name" name="college_name" required>
+        <br>
+            <label for="half">Month and Year</label>
+            <input type="text" id="half" name="time_period" required>
+        <br>
+            <label for="subject_count">Number of subjects</label>
+            <input min="1" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required>
+        <br>
+            <div id="subjects">
+
+            </div>
+        <br>
+            <label for="excel_pdf">Excel / PDF</label>
+            <select name="excel_pdf" id="excel_pdf">
+                <option value="excel">Download Excel</option>
+                <option value="pdf">Download PDF</option>
+            </select>
+        <br>
+            <button type="submit"> submit </button>
+        </form>
+    </div>
+    
+
+
+
+</body>
+</html>
