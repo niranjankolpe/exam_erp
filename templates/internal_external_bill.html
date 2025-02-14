@@ -16,6 +16,7 @@
             formContainer.innerHTML = "";
 
             for (var i = 1; i <= subject_count; i++) {
+                console.log("Hii " + i);
                 // Create a label element
                 var label = document.createElement('label');
                 label.setAttribute('for', 'subject' + i.toString()); // Associate the label with the input
@@ -100,8 +101,6 @@
     </script>
 </head>
 <body>
-    
-
     <div>
         <form id="statement_of_labstaff_form" method="post" action="{% url "internal_external" %}">{% csrf_token %}
             <label for="university">university Name</label>

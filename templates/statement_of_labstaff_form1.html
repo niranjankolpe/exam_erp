@@ -1,11 +1,14 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href= {% static "css/style.css" %}>
+    <title>Statement of Lab Staff</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -20,31 +23,89 @@
             formContainer.innerHTML = "";
 
             for (var i = 1; i <= subject_count; i++) {
-                // Create a label element
-                var label = document.createElement('label');
-                label.setAttribute('for', 'subject' + i.toString()); // Associate the label with the input
-                label.innerHTML = 'Subject ' + i.toString(); // Text for the label
+                var subjectDiv = document.createElement('div');
+                //subjectDiv.setAttribute('style', 'border: 1px solid red;');
 
-                // Create an input element
-                var input = document.createElement('input');
-                input.setAttribute('type', 'text');
-                input.setAttribute('id', 'subject' + i.toString());
-                input.setAttribute('name', 'subject' + i.toString());
-                input.setAttribute('placeholder', 'subject' + i.toString() +" name");
+                var subjectDetailsDiv = document.createElement('div');
+                subjectDetailsDiv.setAttribute('class', 'row');
+                // subjectDetailsDiv.setAttribute('style', 'border: 1px solid blue;');
+
+                var subjectDetailsDivCol1 = document.createElement('div');
+                subjectDetailsDivCol1.setAttribute('class', 'col-6');
+                // subjectDetailsDivCol1.setAttribute('style', 'border: 1px solid green;');
+
+                var subjectDetailsDivCol2 = document.createElement('div');
+                subjectDetailsDivCol2.setAttribute('class', 'col-3');
+                // subjectDetailsDivCol2.setAttribute('style', 'border: 1px solid green;');
+
+                var subjectDetailsDivCol3 = document.createElement('div');
+                subjectDetailsDivCol3.setAttribute('class', 'col-3');
+                // subjectDetailsDivCol3.setAttribute('style', 'border: 1px solid green;');
+
+                // Create a select list for subject
+                var label = document.createElement('label');
+                label.setAttribute('for', 'subject' + i.toString());
+                label.innerHTML = 'Subject ' + i.toString();
+                var select = document.createElement('select');
+                select.setAttribute('id', 'subject' + i.toString());
+                select.setAttribute('name', 'subject' + i.toString());
+                select.setAttribute('required', 'true');
+                var defaultOption = document.createElement('option');
+                defaultOption.setAttribute('value', '');
+                defaultOption.textContent = "Select Subject";
+                defaultOption.setAttribute('disabled', 'true');
+                defaultOption.setAttribute('selected', 'true');
+                select.appendChild(defaultOption);
+                {% for subject in subjects %}
+                    var option = document.createElement('option');
+                    option.setAttribute('value', '{{ subject.name }}');
+                    option.textContent = '{{ subject.name }}';
+                    select.appendChild(option);
+                {% endfor %}
 
                 // Create Academic Year
+                var academic_year_label = document.createElement('label');
+                academic_year_label.setAttribute('for', 'subject' + i.toString()+"_academic_year");
+                academic_year_label.innerHTML = "Academic Year"
+
                 var academic_year = document.createElement('select');
                 academic_year.setAttribute('id', 'subject' + i.toString()+"_academic_year");
                 academic_year.setAttribute('name', 'subject' + i.toString()+"_academic_year");
                 academic_year.innerHTML = '<option value="FE">FE</option> <option value="SE">SE</option> <option value="TE">TE</option> <option value="BE">BE</option>';
 
+
                 // Create PR/OR/TW
+                var pr_or_tw_label = document.createElement('label');
+                pr_or_tw_label.setAttribute('for', 'subject' + i.toString()+"_pr_or_tw");
+                pr_or_tw_label.innerHTML = "PR/OR/TW"
+                
                 var pr_or_tw = document.createElement('select');
                 pr_or_tw.setAttribute('id', 'subject' + i.toString()+"_pr_or_tw");
                 pr_or_tw.setAttribute('name', 'subject' + i.toString()+"_pr_or_tw");
                 pr_or_tw.innerHTML = '<option value="PR">PR</option> <option value="OR">OR</option> <option value="TW">TW</option>';
 
+
+                // Row for other subject details
+                var subjectOtherDetailsDiv = document.createElement('div');
+                subjectOtherDetailsDiv.setAttribute('class', 'row');
+                //subjectOtherDetailsDiv.setAttribute('style', 'border: 1px solid blue;');
+
+                var subjectOtherDetailsDivCol1 = document.createElement('div');
+                subjectOtherDetailsDivCol1.setAttribute('class', 'col');
+                // subjectOtherDetailsDivCol1.setAttribute('style', 'border: 1px solid green;');
+
+                var subjectOtherDetailsDivCol2 = document.createElement('div');
+                subjectOtherDetailsDivCol2.setAttribute('class', 'col');
+                // subjectOtherDetailsDivCol2.setAttribute('style', 'border: 1px solid green;');
+
+                var subjectOtherDetailsDivCol3 = document.createElement('div');
+                subjectOtherDetailsDivCol3.setAttribute('class', 'col');
+                // subjectOtherDetailsDivCol3.setAttribute('style', 'border: 1px solid green;');
+
                 // Create number of student
+                var student_count_label = document.createElement('label');
+                student_count_label.setAttribute('for', 'subject' + i.toString()+"_student_count");
+                student_count_label.innerHTML = "Students count"
                 var student_count = document.createElement("input");
                 student_count.setAttribute("id", 'subject' + i.toString()+"_student_count");
                 student_count.setAttribute("name", 'subject' + i.toString()+"_student_count");
@@ -52,12 +113,18 @@
                 student_count.setAttribute("placeholder", 'Students appered');
 
                 // Create Date of conduct
+                var date_of_conduct_label = document.createElement('label');
+                date_of_conduct_label.setAttribute('for', 'subject' + i.toString()+"_date_of_conduct");
+                date_of_conduct_label.innerHTML = "Date of Exam"
                 var date_of_conduct = document.createElement("input");
                 date_of_conduct.setAttribute("type", "date");
                 date_of_conduct.setAttribute("id", 'subject' + i.toString()+"_date_of_conduct");
                 date_of_conduct.setAttribute("name", 'subject' + i.toString()+"_date_of_conduct");
 
                 // Create days of preparation
+                var days_of_preparation_label = document.createElement('label');
+                days_of_preparation_label.setAttribute('for', 'subject' + i.toString()+"_days_of_preparation");
+                days_of_preparation_label.innerHTML = "Days of Preparation"
                 var days_of_preparation = document.createElement("input");
                 days_of_preparation.setAttribute("id", 'subject' + i.toString()+"_days_of_preparation");
                 days_of_preparation.setAttribute("name", 'subject' + i.toString()+"_days_of_preparation");
@@ -65,6 +132,10 @@
                 days_of_preparation.setAttribute("placeholder", 'Days takenfor preparation');
 
                 // Create Number of batches
+                var batch_count_label = document.createElement('label');
+                batch_count_label.setAttribute('for', 'subject' + i.toString()+"_batch_count");
+                batch_count_label.innerHTML = "No. of Batches"
+                
                 var batch_count = document.createElement("input");
                 batch_count.setAttribute("id", 'subject' + i.toString()+"_batch_count");
                 batch_count.setAttribute("name", 'subject' + i.toString()+"_batch_count");
@@ -72,6 +143,10 @@
                 batch_count.setAttribute("placeholder", 'Number of batches');
 
                 // Create number of expert
+                var expert_count_label = document.createElement('label');
+                expert_count_label.setAttribute('for', 'subject' + i.toString()+"_expert_count");
+                expert_count_label.innerHTML = "No. of Experts"
+
                 var expert_count = document.createElement("input");
                 expert_count.setAttribute("id", 'subject' + i.toString()+"_expert_count");
                 expert_count.setAttribute("name", 'subject' + i.toString()+"_expert_count");
@@ -79,6 +154,10 @@
                 expert_count.setAttribute("placeholder", "Number of experts")
 
                 // Create number of lab assistant
+                var lab_assistant_count_label = document.createElement('label');
+                lab_assistant_count_label.setAttribute('for', 'subject' + i.toString()+"_lab_assistant_count");
+                lab_assistant_count_label.innerHTML = "No. of Lab Assistants"
+
                 var lab_assistant_count = document.createElement("input");
                 lab_assistant_count.setAttribute("id", 'subject' + i.toString()+"_lab_assistant_count");
                 lab_assistant_count.setAttribute("name", 'subject' + i.toString()+"_lab_assistant_count");
@@ -86,6 +165,10 @@
                 lab_assistant_count.setAttribute("placeholder", "Number of lab assistant")
 
                 // Create number of technical assistant
+                var tech_assistant_count_label = document.createElement('label');
+                tech_assistant_count_label.setAttribute('for', 'subject' + i.toString()+"_tech_assistant_count");
+                tech_assistant_count_label.innerHTML = "No. of Technical Assistants"
+
                 var tech_assistant_count = document.createElement("input");
                 tech_assistant_count.setAttribute("id", 'subject' + i.toString()+"_tech_assistant_count");
                 tech_assistant_count.setAttribute("name", 'subject' + i.toString()+"_tech_assistant_count");
@@ -93,25 +176,62 @@
                 tech_assistant_count.setAttribute("placeholder", "Number of tech assistant")
 
                 // Create number of peon
+                var peon_count_label = document.createElement('label');
+                peon_count_label.setAttribute('for', 'subject' + i.toString()+"_peon_count");
+                peon_count_label.innerHTML = "No. of Peons"
+
                 var peon_count = document.createElement("input");
                 peon_count.setAttribute("id", 'subject' + i.toString()+"_peon_count");
                 peon_count.setAttribute("name", 'subject' + i.toString()+"_peon_count");
                 peon_count.setAttribute("type", "number");
                 peon_count.setAttribute("placeholder", "Number of peon")
 
-                // Append the label and input to the form container
-                formContainer.appendChild(label);
-                formContainer.appendChild(input);
-                formContainer.appendChild(academic_year);
-                formContainer.appendChild(pr_or_tw);
-                formContainer.appendChild(student_count);
-                formContainer.appendChild(date_of_conduct);
-                formContainer.appendChild(days_of_preparation);
+                subjectDetailsDivCol1.appendChild(label);
+                subjectDetailsDivCol1.appendChild(select);
+
+                subjectDetailsDivCol2.appendChild(academic_year_label);
+                subjectDetailsDivCol2.appendChild(academic_year);
+
+                subjectDetailsDivCol3.appendChild(pr_or_tw_label);
+                subjectDetailsDivCol3.appendChild(pr_or_tw);
+
+                subjectOtherDetailsDivCol1.appendChild(student_count_label);
+                subjectOtherDetailsDivCol1.appendChild(student_count);
+
+                subjectOtherDetailsDivCol2.appendChild(date_of_conduct_label);
+                subjectOtherDetailsDivCol2.appendChild(date_of_conduct);
+
+                subjectOtherDetailsDivCol3.appendChild(days_of_preparation_label);
+                subjectOtherDetailsDivCol3.appendChild(days_of_preparation);
+
+                subjectDetailsDiv.appendChild(subjectDetailsDivCol1);
+                subjectDetailsDiv.appendChild(subjectDetailsDivCol2);
+                subjectDetailsDiv.appendChild(subjectDetailsDivCol3);
+
+                subjectOtherDetailsDiv.appendChild(subjectOtherDetailsDivCol1);
+                subjectOtherDetailsDiv.appendChild(subjectOtherDetailsDivCol2);
+                subjectOtherDetailsDiv.appendChild(subjectOtherDetailsDivCol3);
+
+                subjectDiv.appendChild(subjectDetailsDiv);
+                subjectDiv.appendChild(subjectOtherDetailsDiv);
+
+                formContainer.appendChild(subjectDiv);
+
+                formContainer.appendChild(batch_count_label);
                 formContainer.appendChild(batch_count);
+
+                formContainer.appendChild(expert_count_label);
                 formContainer.appendChild(expert_count);
+
+                formContainer.appendChild(lab_assistant_count_label);
                 formContainer.appendChild(lab_assistant_count);
+
+                formContainer.appendChild(tech_assistant_count_label);
                 formContainer.appendChild(tech_assistant_count);
+
+                formContainer.appendChild(peon_count_label);
                 formContainer.appendChild(peon_count);
+
                 formContainer.appendChild(document.createElement('br')); // Line break
                 formContainer.appendChild(document.createElement('br')); // Line break
             }
@@ -404,72 +524,192 @@
 
     
     </script>
+
+    <script>
+        // function test(){
+        //     var testInput = parseInt(document.getElementById("testInput").value, 10);
+        //     testDiv = document.getElementById("testDiv");
+        //     var subjectHTMLCode = testDiv.innerHTML;
+        //     testDiv.innerHTML = "";
+        //     console.log(subjectHTMLCode);
+        //     testDiv.innerHTML = subjectHTMLCode.repeat(testInput);
+        //     //for (var i = 1; i <= subject_count; i++) 
+        // }
+    </script>
 </head>
 <body>
-    
-
-    <div>
-        <form id="statement_of_labstaff_form" method="post" action="{% url "labstaff" %}">{% csrf_token %}
-            <label for="university">university Name</label>
-            <select name="university" id="university">
-                <option value="FE">University of Mumbai</option>
-                <option value="SE">Pune University</option>
-            </select>
+    <div class="container">
         <br>
+        <h2 style="font-family: Georgia, 'Times New Roman', Times, serif; text-align: center;">Statement of Lab Staff</h2><br>
+
+        <form id="statement_of_labstaff_form" method="post" action="{% url 'labstaff' %}" class="custom_form_css" style="width: 100%;">
+            {% csrf_token %}
+
             <label for="college_name">College Name</label>
-            <input type="text" id="college_name" name="college_name" required>
-        <br>
+            <select name="college_name" id="college_name" required>
+                <option value="" disabled selected>Select College</option>
+                {% for college in colleges %}
+                <option value="{{college.name}}">{{college.name}}</option>
+                {% endfor %}
+            </select><br><br>
+
             <label for="department">Department Name</label>
-            <input type="text" id="department" name="department" required>
-        <br>
-            <label for="half">Month and Year</label>
-            <input type="text" id="half" name="time_period" required>
-        <br>
-            <label for="subject_count">Number of subjects</label>
-            <input min="1" max="20" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required>
-        <br>
-            <div id="subjects">
-
-            </div>
-        <br>
-            <label for="rate_PandE_expert">Rate of Expert for P&E</label>
-            <input type="int" id="rate_PandE_expert" name = "rate_expert_PandE" required>
-        <br>
-            <!-- lab assistant -->
-            <label for="rate_prep_lab">Rate of lab assistant for Preparation</label>
-            <input type="int" id="rate_prep_lab" name="rate_lab_assist_prep" required>
-        <br>
-            <label for="rate_exam_lab">Rate of lab assistant for Exam</label>
-            <input type="int" id="rate_exam_lab" name="rate_lab_assist_exam" required>
-        <br>
-            <!-- technical assistant -->
-            <label for="rate_prep_tech">Rate of technical assistant for Preparation</label>
-            <input type="int" id="rate_prep_tech" name="rate_tech_assist_prep" required>
-        <br>
-            <label for="rate_exam_tech">Rate of technical assistant for Exam</label>
-            <input type="int" id="rate_exam_tech" name="rate_tech_assist_exam" required>
-        <br>
-            <!-- peon assistant -->
-            <label for="rate_prep_peon">Rate of peon for Preparation</label>
-            <input type="int" id="rate_prep_peon" name="rate_peon_prep" required>
-        <br>
-            <label for="rate_exam_peon">Rate of peon for Exam</label>
-            <input type="int" id="rate_exam_peon" name="rate_peon_exam" required>
-        <br>
-            <label for="excel_pdf">Excel / PDF</label>
-            <select name="excel_pdf" id="excel_pdf">
-                <option value="excel">Download Excel</option>
-                <option value="pdf">Download PDF</option>
+            <select name="department" id="department" required>
+                <option value="" disabled selected>Select Department</option>
+                {% for department in departments %}
+                <option value="{{department.name}}">{{department.name}}</option>
+                {% endfor %}
             </select>
-        <br>
+
+            <hr style="border: 1px solid black;">
+
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <label for="exam_start_month">Exam Start Month</label>
+                        <select id="exam_start_month" name="exam_start_month" required>
+                            <option value="" disabled selected>Select Month</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="exam_start_year">Exam Start Year</label>
+                        <select id="exam_start_year" name="exam_start_year" required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select><br><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="exam_end_month">Exam End Month</label>
+                        <select id="exam_end_month" name="exam_end_month" required>
+                            <option value="" disabled selected>Select Month</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="exam_end_year">Exam End Year</label>
+                        <select id="exam_end_year" name="exam_end_year" required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             
-            <button type="submit"> submit </button>
+            <hr style="border: 1px solid black;">
             
-        </form>
+            <label for="subject_count">Number of Subjects</label>
+            <input min="1" max="20" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required><br>
+            
+            <div id="subjects">
+                
+            </div>
+
+            <hr style="border: 1px solid black;">
+
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rate_prep_lab">Rate of lab assistant for Preparation</label>
+                        <input type="int" id="rate_prep_lab" name="rate_lab_assist_prep" required>
+                    </div>
+                    <div class="col">
+                        <label for="rate_exam_lab">Rate of lab assistant for Exam</label>
+                        <input type="int" id="rate_exam_lab" name="rate_lab_assist_exam" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="col">
+                        <label for="rate_prep_tech">Rate of technical assistant for Preparation</label>
+                        <input type="int" id="rate_prep_tech" name="rate_tech_assist_prep" required>
+                    </div>
+                    <div class="col">
+                        <label for="rate_exam_tech">Rate of technical assistant for Exam</label>
+                        <input type="int" id="rate_exam_tech" name="rate_tech_assist_exam" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="col">
+                        <label for="rate_prep_peon">Rate of peon for Preparation</label>
+                        <input type="int" id="rate_prep_peon" name="rate_peon_prep" required>
+                    </div>
+                    <div class="col">
+                        <label for="rate_exam_peon">Rate of peon for Exam</label>
+                        <input type="int" id="rate_exam_peon" name="rate_peon_exam" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="col-6">
+                        <label for="rate_PandE_expert">Rate of Expert for P&E</label>
+                        <input type="int" id="rate_PandE_expert" name = "rate_expert_PandE" required>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: 1px solid black;">
+
+            <input id="testInput" type="number" onchange="test()">
+
+            <!-- <div id="testDiv">
+                {% include 'subject_component.html' %}
+            </div> -->
+            
+            <label for="excel_pdf">Download Format</label>
+            <select name="excel_pdf" id="excel_pdf">
+                <option value="excel">Excel (.xlsx)</option>
+                <option value="pdf">PDF (.pdf)</option>
+            </select>
+            
+            <br><br>
+            <button type="submit">Submit</button>
+        </form><br><br>
     </div>
-    
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
+    <!-- Include Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

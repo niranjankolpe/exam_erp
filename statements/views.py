@@ -12,15 +12,47 @@ from reportlab.platypus import Table, TableStyle, Paragraph
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 
+from django.conf import settings
+from statements.models import *
+
 # Create your views here.
+def populate_db():
+    with open('static/raw_data.txt', 'r') as file:
+        lines = file.readlines()
+    
+    for line in lines:
+        try:
+            data = line.strip()
+            record = Subject(name=data)
+            record.save()
+        except Exception as e:
+            continue
+    return
+
 def statement(request):
+    # populate_db()
     return render(request, "select_statement_type.html")
+
+def labstaff(request):
+    colleges = College.objects.all()
+    departments = Department.objects.all()
+    subjects = Subject.objects.all()
+    context = {'colleges': colleges, 'departments': departments, 'subjects': subjects}
+    if request.method == 'POST':
+        return labstaff_excel(request) if request.POST['excel_pdf'] == "excel" else labstaff_pdf(request)
+    return render(request, "statement_of_labstaff_form1.html", context)
 
 def labstaff_excel(request):
     if request.method == 'POST':
         college_name = request.POST['college_name']
-        university = request.POST['university']
-        time_period = request.POST['time_period']
+        # university = request.POST['university']
+
+        exam_start_month = request.POST["exam_start_month"]
+        exam_start_year = request.POST["exam_start_year"]
+        exam_end_month = request.POST["exam_end_month"]
+        exam_end_year = request.POST["exam_end_year"]
+
+        time_period = exam_start_month + " " + exam_start_year + " - " + exam_end_month + " " + exam_end_year
         department = request.POST['department']
         subject_count = int(request.POST['subject_count'])
         rate_expert_PandE = int(request.POST['rate_expert_PandE'])
@@ -164,17 +196,22 @@ def labstaff_excel(request):
 
         # Create the response as an Excel file
         response = HttpResponse(file_stream, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="exam_data.xlsx"'
+        response['Content-Disposition'] = 'attachment; filename="STATEMENT_OF_LABSTAFF.xlsx"'
         return response
-
-
     return render(request, "statement_of_labstaff_form1.html")
 
 def labstaff_pdf(request):
     if request.method == 'POST':
         college_name = request.POST['college_name']
-        university = request.POST['university']
-        time_period = request.POST['time_period']
+        # university = request.POST['university']
+        exam_start_month = request.POST["exam_start_month"]
+        exam_start_year = request.POST["exam_start_year"]
+        exam_end_month = request.POST["exam_end_month"]
+        exam_end_year = request.POST["exam_end_year"]
+
+        time_period = exam_start_month + " " + exam_start_year + " - " + exam_end_month + " " + exam_end_year
+        
+        # time_period = request.POST['time_period']
         department = request.POST['department']
         subject_count = int(request.POST['subject_count'])
         rate_expert_PandE = int(request.POST['rate_expert_PandE'])
@@ -288,7 +325,7 @@ def labstaff_pdf(request):
 
     # Create the HttpResponse object with the appropriate PDF headers
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Output.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="STATEMENT_OF_LABSTAFF.pdf"'
 
     # Create the PDF object, using the HttpResponse object as its "file."
     pdf = canvas.Canvas(response, pagesize=landscape(legal))
@@ -337,12 +374,6 @@ def labstaff_pdf(request):
     pdf.save()
 
     return response
-
-def labstaff(request):
-    if request.method == 'POST':
-        return labstaff_excel(request) if request.POST['excel_pdf'] == "excel" else labstaff_pdf(request)
-            
-    return render(request, "statement_of_labstaff_form1.html")
 
 def internal_external_bill(request):
     if request.method == 'POST':
