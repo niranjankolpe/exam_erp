@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    
+<!--     
     <script>
         
         function changesubjectinput() {
@@ -523,19 +523,54 @@
         }
 
     
-    </script>
+    </script> -->
 
     <script>
-        // function test(){
-        //     var testInput = parseInt(document.getElementById("testInput").value, 10);
-        //     testDiv = document.getElementById("testDiv");
-        //     var subjectHTMLCode = testDiv.innerHTML;
-        //     testDiv.innerHTML = "";
-        //     console.log(subjectHTMLCode);
-        //     testDiv.innerHTML = subjectHTMLCode.repeat(testInput);
-        //     //for (var i = 1; i <= subject_count; i++) 
-        // }
+        function updateSubject(){
+            var noOfSubjects = parseInt(document.getElementById("subject_count").value, 10);
+            SubjectDiv = document.getElementById("subjects");
+            var subjectHTMLCode = document.getElementById("testDiv").innerHTML;
+
+            SubjectDiv.innerHTML = '';
+
+            for (var i = 1; i <= noOfSubjects; i++) {
+                var updatedHTML = subjectHTMLCode
+                .replace('<label for="subject">Subject</label>', `<label for="subject${i}">Subject ${i}</label>`)
+                .replace('<select id="subject" name="subject">', `<select id="subject${i}" name="subject${i}">`)
+                .replace('<label for="subject_academic_year">', `<label for="subject${i}_academic_year">`)
+                .replace('<select id="subject_academic_year" name="subject_academic_year">', `<select id="subject${i}_academic_year" name="subject${i}_academic_year">`)
+                .replace('<label for="subject_pr_or_tw">', `<label for="subject${i}_pr_or_tw">`)
+                .replace('<select id="subject_pr_or_tw" name="subject_pr_or_tw">', `<select id="subject${i}_pr_or_tw" name="subject${i}_pr_or_tw">`)
+                
+                .replace('<label for="subject_student_count">', `<label for="subject${i}_student_count">`)
+                .replace('<input name="subject_student_count" id="subject_student_count" type="number" placeholder="Enter here">', `<input name="subject${i}_student_count" id="subject${i}_student_count" type="number" placeholder="Enter here">`) 
+                .replace('<label for="subject_date_of_conduct">', `<label for="subject${i}_date_of_conduct">`)
+                .replace(`<input name="subject_date_of_conduct" id="subject_date_of_conduct" type="date">`, `<input name="subject${i}_date_of_conduct" id="subject${i}_date_of_conduct" type="date">`)
+                .replace('<label for="subject_days_of_preparation">', `<label for="subject${i}_days_of_preparation">`)
+                .replace(`<input name="subject_days_of_preparation" id="subject_days_of_preparation" type="number" placeholder="Enter here">`, `<input name="subject${i}_days_of_preparation" id="subject${i}_days_of_preparation" type="number" placeholder="Enter here">`)
+                
+                .replace(`<label for="subject_batch_count">`, `<label for="subject${i}_batch_count">`)
+                .replace(`<input name="subject_batch_count" id="subject_batch_count" type="number" placeholder="Enter here">`, `<input name="subject${i}_batch_count" id="subject${i}_batch_count" type="number" placeholder="Enter here">`)
+                .replace(`<label for="subject_expert_count">`, `<label for="subject${i}_expert_count">`)
+                .replace(`<input name="subject_expert_count" id="subject_expert_count" type="number" placeholder="Enter here">`, `<input name="subject${i}_expert_count" id="subject${i}_expert_count" type="number" placeholder="Enter here">`)
+                .replace(`<label for="subject_lab_assistant_count">`, `<label for="subject${i}_lab_assistant_count">`)
+                .replace(`<input name="subject_lab_assistant_count" id="subject_lab_assistant_count" type="number" placeholder="Enter here">`, `<input name="subject${i}_lab_assistant_count" id="subject${i}_lab_assistant_count" type="number" placeholder="Enter here">`)
+                .replace(`<label for="subject_tech_assistant_count">`, `<label for="subject${i}_tech_assistant_count">`)
+                .replace(`<input name="subject_tech_assistant_count" id="subject_tech_assistant_count" type="number" placeholder="Enter here">`, `<input name="subject${i}_tech_assistant_count" id="subject${i}_tech_assistant_count" type="number" placeholder="Enter here">`)
+                .replace(`<label for="subject_peon_count">`, `<label for="subject${i}_peon_count">`)
+                .replace(`<input name="subject_peon_count" id="subject_peon_count" type="number" placeholder="Enter here">`, `<input name="subject${i}_peon_count" id="subject${i}_peon_count" type="number" placeholder="Enter here">`);
+
+                SubjectDiv.innerHTML += updatedHTML;
+            }
+        }
     </script>
+    
+    <style>
+        .col > input[type="number"], input {
+            width: 100%;
+            box-sizing: border-box;  /* Ensures padding and borders are included in the width */
+        }
+    </style> 
 </head>
 <body>
     <div class="container">
@@ -631,11 +666,11 @@
             <hr style="border: 1px solid black;">
             
             <label for="subject_count">Number of Subjects</label>
-            <input min="1" max="20" type="number" id="subject_count" name="subject_count" onchange="changesubjectinput()" required><br>
-            
-            <div id="subjects">
-                
+            <input min="1" max="20" type="number" id="subject_count" name="subject_count" onchange="updateSubject()" placeholder="Enter here" required><br>
+            <div id="testDiv" hidden disabled>
+                {% include 'subject_component.html' %}
             </div>
+            <div id="subjects"></div>
 
             <hr style="border: 1px solid black;">
 
@@ -643,48 +678,42 @@
                 <div class="row">
                     <div class="col">
                         <label for="rate_prep_lab">Rate of lab assistant for Preparation</label>
-                        <input type="int" id="rate_prep_lab" name="rate_lab_assist_prep" required>
+                        <input type="int" id="rate_prep_lab" name="rate_lab_assist_prep" placeholder="Enter here" required>
                     </div>
                     <div class="col">
                         <label for="rate_exam_lab">Rate of lab assistant for Exam</label>
-                        <input type="int" id="rate_exam_lab" name="rate_lab_assist_exam" required>
+                        <input type="int" id="rate_exam_lab" name="rate_lab_assist_exam" placeholder="Enter here" required>
                     </div>
                 </div><br>
                 <div class="row">
                     <div class="col">
                         <label for="rate_prep_tech">Rate of technical assistant for Preparation</label>
-                        <input type="int" id="rate_prep_tech" name="rate_tech_assist_prep" required>
+                        <input type="int" id="rate_prep_tech" name="rate_tech_assist_prep" placeholder="Enter here" required>
                     </div>
                     <div class="col">
                         <label for="rate_exam_tech">Rate of technical assistant for Exam</label>
-                        <input type="int" id="rate_exam_tech" name="rate_tech_assist_exam" required>
+                        <input type="int" id="rate_exam_tech" name="rate_tech_assist_exam" placeholder="Enter here" required>
                     </div>
                 </div><br>
                 <div class="row">
                     <div class="col">
                         <label for="rate_prep_peon">Rate of peon for Preparation</label>
-                        <input type="int" id="rate_prep_peon" name="rate_peon_prep" required>
+                        <input type="int" id="rate_prep_peon" name="rate_peon_prep" placeholder="Enter here" required>
                     </div>
                     <div class="col">
                         <label for="rate_exam_peon">Rate of peon for Exam</label>
-                        <input type="int" id="rate_exam_peon" name="rate_peon_exam" required>
+                        <input type="int" id="rate_exam_peon" name="rate_peon_exam" placeholder="Enter here" required>
                     </div>
                 </div><br>
                 <div class="row">
                     <div class="col-6">
                         <label for="rate_PandE_expert">Rate of Expert for P&E</label>
-                        <input type="int" id="rate_PandE_expert" name = "rate_expert_PandE" required>
+                        <input type="int" id="rate_PandE_expert" name = "rate_expert_PandE" placeholder="Enter here" required>
                     </div>
                 </div>
             </div>
 
             <hr style="border: 1px solid black;">
-
-            <input id="testInput" type="number" onchange="test()">
-
-            <!-- <div id="testDiv">
-                {% include 'subject_component.html' %}
-            </div> -->
             
             <label for="excel_pdf">Download Format</label>
             <select name="excel_pdf" id="excel_pdf">

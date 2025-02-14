@@ -1,1 +1,68 @@
-<div id="my-component"><p>This is a subject component!</p></div>
+<div class="subjectComponent">
+    <div class="row">
+        <div class="col-4">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject">
+                <option value="" disabled selected>Select Subject</option>
+                {% for subject in subjects %}
+                <option value="{{subject.name}}">{{subject.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <label for="subject_academic_year">Academic Year</label>
+            <select id="subject_academic_year" name="subject_academic_year">
+                <option value="" disabled selected>Select Academic Year</option>
+                <option value="FE">FE</option>
+                <option value="SE">SE</option>
+                <option value="TE">TE</option>
+                <option value="BE">BE</option>
+            </select>
+        </div>
+        <div class="col">
+            <label for="subject_pr_or_tw">PR/OR/TW</label>
+            <select id="subject_pr_or_tw" name="subject_pr_or_tw">
+                <option value="" disabled selected>Select PR/OR/TW</option>
+                <option value="PR">PR</option>
+                <option value="OR">OR</option>
+                <option value="TW">TW</option>
+            </select>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col">
+            <label for="subject_student_count">Student Count</label>
+            <input name="subject_student_count" id="subject_student_count" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_date_of_conduct">Date of Exam</label>
+            <input name="subject_date_of_conduct" id="subject_date_of_conduct" type="date">
+        </div>
+        <div class="col">
+            <label for="subject_days_of_preparation">Days of Preparation</label>
+            <input name="subject_days_of_preparation" id="subject_days_of_preparation" type="number" placeholder="Enter here">
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col">
+            <label for="subject_batch_count">No. of Batches</label>
+            <input name="subject_batch_count" id="subject_batch_count" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_expert_count">No. of Experts</label>
+            <input name="subject_expert_count" id="subject_expert_count" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_lab_assistant_count">No. of Lab Assistants</label>
+            <input name="subject_lab_assistant_count" id="subject_lab_assistant_count" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_tech_assistant_count">No. of Tech Assistants</label>
+            <input name="subject_tech_assistant_count" id="subject_tech_assistant_count" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_peon_count">No. of Peons</label>
+            <input name="subject_peon_count" id="subject_peon_count" type="number" placeholder="Enter here">
+        </div>
+    </div>
+</div><hr style="border: 2px dotted blueviolet;">
