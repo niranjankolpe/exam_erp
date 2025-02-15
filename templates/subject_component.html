@@ -64,5 +64,32 @@
             <label for="subject_peon_count">No. of Peons</label>
             <input name="subject_peon_count" id="subject_peon_count" type="number" placeholder="Enter here">
         </div>
+    </div><br>
+    <div class="row">
+        <div class="col">
+            <label for="subject_examiner_name">Examiner Name</label>
+            <select id="subject_examiner_name" name="subject_examiner_name">
+                <option value="" disabled selected>Select Examiner Name</option>
+                {% for teacher in teachers %}
+                <option value="{{teacher.name}}">{{teacher.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <label for="subject_category">Examiner Category</label>
+            <select id="subject_category" name="subject_category">
+                <option value="" disabled selected>Select Examiner Category</option>
+                <option value="I">INTERNAL</option>
+                <option value="E">EXTERNAL</option>
+            </select>
+        </div>
+        <div class="col">
+            <label for="subject_rate">Subject Rate</label>
+            <input name="subject_rate" id="subject_rate" type="number" placeholder="Enter here">
+        </div>
+        <div class="col">
+            <label for="subject_payable_rate">Payable Rate</label>
+            <input name="subject_payable_rate" id="subject_payable_rate" type="number" placeholder="Enter here">
+        </div>
     </div>
 </div><hr style="border: 2px dotted blueviolet;">

@@ -449,7 +449,7 @@ def expert_lab_peon_pdf(request):
 
 def total_lab_and_staff(request):
     if request.method == 'POST':
-        return total_lab_and_staff_excel(request) if request.POST['excel_pdf'] == "excel" else total_lab_and_staff_pdf(request)
+        return total_lab_and_staff_excel(request)
     return render(request, "total_bill_lab_and_staff.html")
 
 def total_lab_and_staff_excel(request):
